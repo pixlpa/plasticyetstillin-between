@@ -896,7 +896,7 @@ function Shot(gl){
    			1,1,1,1,
    			1,1,1,1,
    			1,1,1,1,
-   			s1,1,1,1]);
+   			1,1,1,1]);
 }
 		
 Shot.prototype.draw = function(gl,texture){
