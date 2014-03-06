@@ -1,0 +1,278 @@
+canvas {
+	position:absolute;
+	top:0;left:0;
+	z-index:0;
+	width:100%;
+	height:100%;
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h1 {
+	font-size: 24px;
+	color: #00BB00;
+	padding: 0px;
+}
+
+#gallery {
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	position:absolute;
+	overflow: hidden;
+	background-color: rgba(0,0,0,0.5);
+	display:none;
+	z-index:1;
+}
+
+#info {
+	overflow:hidden;
+	position:absolute;
+	bottom: 0px;
+	right:20px;
+	z-index:2;
+	font:10pt Arial;
+	height: 0px;
+	width: 200px;
+	background:white;
+	opacity:0.7;
+	border-radius: 15px 15px 0px 0px;
+	padding:0px 0px 5px 30px;
+	cursor:pointer;
+}
+
+.artslide {
+	width: 5%;
+	height: 100%;
+	display: table-cell;
+	overflow: hidden;
+	float:left;
+	z-index:4;
+}
+
+#artshow {
+	width: 100%;
+	height: 95%;
+	overflow: hidden;
+	overflow-x: auto;
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:3;
+}
+
+#artholder {
+	left:0;
+	top:0;
+	position:absolute;
+	overflow: hidden;
+	height: 100%;
+	width: 2000%;
+	z-index:3;
+}
+
+.artslide p {
+	color: #FFBBFF;
+	font-size: 20px;
+	margin-top: 0px;
+	z-index:5;
+}
+
+#buttonholder {
+	width: 800px;
+	height: 30px;
+	padding:15px;
+	//background-color: #f8fbed;
+	position: absolute;
+	left: 20px;
+	top: 92%;
+}
+
+.pxbutn {
+	padding: 8px;
+	background-color: #bFbFbF;
+	color: white;
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	font-size: 1.1em;
+	box-shadow: 2px 2px 5px #c888a8;
+	cursor: pointer;
+}
+
+#backbb {
+	width: 73px;
+	margin-top:0px;
+	height:20px;
+	cursor: e-resize;
+	display: none;
+}
+
+.pxbutn:hover{
+	background-color: #8Fdcdc;
+}
+
+.pxbutn2 {
+	padding: 5px;
+	background-color: #bFbFbF;
+	color: black;
+	float: right;
+	margin-left: 10px;
+	margin-top: 20px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	font-size: 0.75em;
+	box-shadow: 1px 1px 4px #f080b0;
+	cursor: pointer;
+}
+
+.pxbutn2:hover {
+	background-color: #8Fdcdc;
+}
+iframe{
+		width:100%;
+		height:95%;
+		top:0px;
+		left:0px;
+		margin: 0;
+		position:inherit;
+		z-index: 6;
+}
+
+.suzybox{
+	width: 50%;
+	height: 100%;
+	display: table-cell;
+	overflow: hidden;
+	float:left;
+	z-index:4;
+}
+
+img.suz {
+	height: 100%;
+	float:left;
+	padding-left:100px;
+	padding-top:0px;
+	margin: 0px;
+	z-index: 6;
+}
+
+#over{
+	width:100%;
+	height:80%;
+	z-index:10;
+	cursor:move;
+	display:inline;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+#namebadge{
+	position:absolute;
+	font-size: 60px;
+	font-style: italic;
+	font-family: Helvetica,Arial,sans-serif;
+	bottom:0px;
+	height:0%;
+	width: 100%;
+	text-align:right;
+	padding-right:20px;
+	right:10%;
+	color:#55FF55;
+	z-index:11;
+	overflow:hidden;
+}
+
+#hidden {
+	position:absolute;
+	top:0;left:0;
+	z-index:-3;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	display:none;
+}
+
+#hidden img {
+	float: left;
+}
+#loader {
+	position:absolute;
+	top:0;left:0;
+	z-index:-2;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+}
+
+#loader img {
+	height:100%;
+}
+
+#songs{
+	bottom:0px;
+	left:30px;
+	width: 100%;
+	position: inherit;
+	z-index:12;
+}
+audio {
+	bottom:0px;
+	left:0px;
+	position: inherit;
+	display:none;
+	z-index:12;
+}
+
+#pavilion-info{
+	display:none;
+	width:60%;
+	position:absolute;
+	z-index:12;
+	right: 100px;
+	bottom: 250px;	
+	background: rgb(236, 245, 248);
+	padding:20px;
+	border-radius:10px;
+	box-shadow: -5px 5px 20px grey;
+	opacity:60%
+}
+#pavilion-info a {
+	text-decoration:none;
+	color:black;
+}
+#pavilion-info h1 {
+	font-style: italic;
+	font-size: 40px;
+	line-height: 0px;
+	color: rgb(99, 115, 116);
+}
+#pavilion-info h2 {
+	font-size: 18px;
+	line-height: 0px;
+	margin-left: 2px;
+	color: rgb(129, 139, 139);
+	font-weight: lighter;
+}
+#pavilion-info img {
+	float:right;
+}
+
+#artistlist li{
+	list-style-type: none;
+	line-height:20px;
+	-webkit-transition: -webkit-transform 0.1s;
+	-moz-transition: -moz-transform 0.1s;
+}
+#artistlist li a:hover{
+	background:rgb(0,255,100);
+	-webkit-transform: scaleX(2.05) scaleY(2.05);
+	-moz-transform: scaleX(2.1) scaleY(2.1);
+	box-shadow: 2px 2px 2px green;
+}

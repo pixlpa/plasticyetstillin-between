@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+  <title id="page_title">Plastic Yet Still In-Between</title>
+  <link rel="stylesheet" href="plastic.css" type="text/css" />
+  </head>
+  <body>
+  	<img id="img01" style="display:none" />
+  	<img id="img02" src="terrain/ground01.jpg" style="display:none" />
+   	<img id="img03" src="terrain/ground02.jpg" style="display:none" />
+   	<div id="hidden"><img id="img04" src="terrain/ground06.gif" /><img src="signs/davidoreilly.gif" /></div>
+   	<div id="loader"><img src="images/plasticloader.gif" /></div>
+    <div><canvas id='c'></canvas></div>
+    <div id="info"><img src="images/plasticlogo.gif" width="150px" /><div id="cords"></div><br />Use W,A,S,D, or Arrow keys to move)<br /></div>
+	<div id="gallery"><div id="artshow"><div id="artholder"></div><div id="over"></div></div></div>
+	<div id="namebadge"><div id="songs"><audio id="bowie" controls preload="none"></audio><audio id="poling" controls preload="none"></audio><audio id="jonomilo" controls preload="none"></audio></div></div>
+	<div id="pavilion-info">
+		<h1>Plastic Yet Still In-Between</h1><h2>pavilion curated by <a href="http://pixlpa.com">Andrew Benson</a> for <a href="http://thewrong.org">the Wrong Biennale</a></h2><a href="http://thewrong.org" target="_blank"><img src="images/thewrong.jpg" id="wrongimg" /></a>
+		<ul id="artistlist">
+		<li><a href="http://iancheng.com" target="_blank">IAN CHENG</a> [400,400] "bbrraattss" 2013</li>
+		<li><a href="http://davidoreilly.com" target="_blank">DAVID OREILLY</a> [-400,800] "RGBXYZ" 2007</li>
+		<li><a href="http://reedandrader.com" target="_blank">REED+RADER</a> [800,1400] "Brave New World" 2013</li>
+		<li><a href="http://alxclub.com" target="_blank">ALEX MCLEOD</a> [1600,400] "Where We Started" 2013</li>
+		<li><a href="http://suzypoling.com" target="_blank">SUZY POLING</a> [800,-600] "GLASS TEARS" - "Die and Come Alive" 2013</li>
+		<li><a href="http://jacobciocci.org" target="_blank">JACOB CIOCCI</a> [0,-800] "Take Me" 2012</li>
+		<li><a href="http://katietorn.com" target="_blank">KATIE TORN</a> [-600,-400] "The Calm Before the Storm","Monument","Sleeping Beauty","Still Life With Clock","Snow White","Aunt Lizzie" 2012</li>
+		<li><a href="http://teeeams.tumblr.com/" target="_blank">SEAN BOWIE (TEAMS)</a> [-1200,400] "OVOXO (Trust Edit)" 2013</li>
+		<li><a href="http://joeyryken.info" target="_blank">JOEY RYKEN</a> [-1600,1600] "BULLROARER'S RED HERRING PARAPHRAND" 2013</li>
+		<li><a href="http://amjc.tv/" target="_blank">ALEJANDRO CRAWFORD</a> [-600,1800] "Innernet" 2011</li>
+		<li><a href="http://danielswan.co.uk" target="_blank">DANIEL SWAN</a> [-1000,-1200] "Sample Core" 2013</li>
+		<li><a href="http://allencordell.com" target="_blank">ALLEN CORDELL</a> [0,1600] "Cocaine Werewolf 2013" 2013</li>
+		<li><a href="http://dlew.me/" target="_blank">DAVID LEWANDOWSKI</a> [-1300,-350] "Late For The Meeting" 2013</li>
+		<li><a href="http://daytimetelevision.tumblr.com/" target="_blank">JÓNÓ MÍ LÓ</a> [900,-1200] 2013</li>
+		</ul>
+	</div>
+	<img src="signs/art/amcleod01.jpg" style="display:none" />
+	<img src="signs/art/amcleod02.jpg" style="display:none" />
+	<img src="signs/art/suzy00.jpg" style="display:none" />
+	<img src="signs/art/suzy01.jpg" style="display:none" />
+	<img src="signs/art/suzy02.jpg" style="display:none" />
+	<img src="signs/art/suzy03.jpg" style="display:none" />
+	<img src="signs/art/jono01.jpg" style="display:none" />
+	<img src="signs/art/jono02.gif" style="display:none" />
+	<img src="signs/art/jono03.gif" style="display:none" />
+	<img src="signs/art/jono04.gif" style="display:none" />
+	<img src="signs/art/jono05.jpg" style="display:none" />
+	
+  </body>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+    <script src='js/pxglutils.js'></script>
+    <script src='js/pxgiflocator.js'></script>
+    <script src='js/gl-matrix.js'></script>
+    <script id="shader-fs" type="x-shader/x-fragment">
+    	precision mediump float;
+
+    	varying vec4 vColor;
+    	varying vec2 tc;
+		uniform sampler2D tex0;
+		uniform sampler2D tex1;
+		uniform float usetex;
+		uniform vec4 foggy;
+		uniform float invert;
+		
+    	void main(void) {
+    		float fog = min(max(1.0 - (gl_FragCoord.z/gl_FragCoord.w) * foggy.a,0.),1.);
+    		//gl_FragColor = vec4(fog,fog,fog,1.);
+        	vec4 thecolor = mix(mix(vec4(1.),texture2D(tex0,tc),usetex)*vColor,vec4(foggy.rgb,1),1.-fog);
+        	gl_FragColor = mix(thecolor,vec4(vec3(1.)-thecolor.rgb,thecolor.a),invert);
+    	}
+	</script>
+	<script id="shader-vs" type="x-shader/x-vertex">
+	    attribute vec3 pos;
+	    attribute vec4 color;
+	    attribute vec2 texcoord;
+		
+		uniform mat4 uMVMatrix;
+    	uniform mat4 uPMatrix;
+	    uniform vec2 tscale;
+	    uniform vec2 toffset;
+	    uniform float protate;
+	    uniform vec3 pscale;
+	    uniform vec3 ptranslate;
+	    uniform vec4 pcolor;
+
+    	varying vec4 vColor;
+    	varying vec2 tc;
+    	
+    	mat4 rotationMatrix(vec3 axi, float angle) {
+    		vec3 axis = normalize(axi);
+    		float s = sin(angle);
+    		float c = cos(angle);
+    		float oc = 1.0 - c;
+    
+   			return mat4(oc * axis.x * axis.x + c,   oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+		}
+
+    	void main(void) {
+    		vec4 transformed = (rotationMatrix(vec3(0.,1.,0.),protate)*vec4(pos*pscale,1.))+vec4(ptranslate,0.);
+        	gl_Position = uPMatrix*uMVMatrix*transformed;
+        	vColor = color*pcolor;
+        	vec2 ttt = ((texcoord*2.-vec2(1.))*tscale+toffset)*0.5+vec2(0.5);
+        	tc= ttt;
+    	}
+	</script>
+    <script>
+    	var c = document.getElementById('c');
+		c.width = $(document).width();
+		c.height = $(document).height();
+		c.aspect = $(document).width()/$(document).height();
+		var inverted = false;
+		var billB,glitz,mash;
+		var grad = new Array();
+		var house = new Array();
+		var terra = new Array();
+		var borders = new Array();
+		var shot;
+		var ti = [0];
+		ti.tt = [100];
+		var gl,program;
+		var mytex,mytex2,signImage;
+		var fboz = new Array();
+		var fboCount = 3;
+		var fbscale;
+		var fboffset;
+		var vscale,voffset,vcolor,vinvert;
+		var scx,scy,offx,offy;
+		var fog;
+		var mvMatrix,pMatrix,vMatrix;
+		var hmz = mat4.create();
+		var cam;
+		var revolt = 0;
+		var drawsigns=true;
+		
+		
+   		function degToRad(degrees) {
+        	return degrees * Math.PI / 180;
+    	}
+    	
+
+		initGL();
+		initImages();
+		initGeometry();
+		initFBOs(gl,fboz,fboCount);
+		resizeCanvas();
+		
+    	function initGL(){
+    		try { gl = c.getContext("webgl"); }
+    		catch (x) { gl = null; }
+
+    		if (gl == null) {
+        		try { gl = c.getContext("experimental-webgl"); }
+        		catch (x) { gl = null; }
+    		}
+		  if(gl != null){
+    		gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+    		gl.enable(gl.BLEND);
+    		gl.enable(gl.DEPTH_TEST);
+    		gl.clearColor(1,1,1,1.);
+			gl.viewport(0,0,c.width,c.height);
+			gl.viewportWidth = c.width;
+            gl.viewportHeight = c.height;
+        	gl.depthRange(0.000001,10000.0);
+			program = createProgram("shader-vs","shader-fs");
+			gl.useProgram(program);
+			fbscale = gl.getUniformLocation(program,"tscale");
+			fboffset = gl.getUniformLocation(program,"toffset");
+			fbusetex = gl.getUniformLocation(program,"usetex");
+			vinvert = gl.getUniformLocation(program,"invert");
+			vtranslate = gl.getUniformLocation(program,"ptranslate");
+			vscale = gl.getUniformLocation(program,"pscale");
+			vcolor = gl.getUniformLocation(program,"pcolor");
+			vrotate = gl.getUniformLocation(program,"protate");
+			fog = gl.getUniformLocation(program,"foggy");
+			gl.uniform1f(vinvert,0);
+			gl.uniform2f(fboffset,0.0,0);
+			gl.uniform2f(fbscale,1,1);
+			gl.uniform3f(vscale,1,1,1);
+			gl.uniform3f(vtranslate,0,0,0);
+			gl.uniform4f(vcolor,1,1,1,1);
+			gl.uniform4f(fog,1,1,1,0.2);
+			program.pMatrixUniform = gl.getUniformLocation(program, "uPMatrix");
+        	program.mvMatrixUniform = gl.getUniformLocation(program, "uMVMatrix");
+			mvMatrix = mat4.create();
+    		pMatrix = mat4.create();
+    		vMatrix = mat4.create();
+    		cam = new pxCamera();
+    		cam.floor = -0.5;
+    		gif = new gifLocs();
+    		document.onkeydown = function(event){ cam.kdown(event);};
+    		document.onkeyup = function(event){ cam.kup(event);};
+    	  }
+    	  else {
+    	  	window.location.replace("simple.html");
+    	  }
+		}
+		
+		function initGeometry(){
+			initAttrs();
+			for(h=0;h<40;h++){	
+				//addHouse();
+				//addMoreDudes();
+				addGround();
+				addFence();
+			}
+			billB = new billBoard(gl);
+			glitz = new glitchTri(3);
+			glitz.active = false;
+			mash = new warpMesh(3,3);
+			gl.activeTexture(gl.TEXTURE0);
+    		gl.uniform1i(gl.getUniformLocation(program,"tex0"), 0);
+    		gl.bindTexture(gl.TEXTURE_2D, mytex);
+		}
+
+    	function setMatrixUniforms() {
+        	gl.uniformMatrix4fv(program.pMatrixUniform, false, pMatrix);
+        	gl.uniformMatrix4fv(program.mvMatrixUniform, false, mvMatrix);
+    	}
+
+		function addShot(){
+			shot = new Shot(gl);
+		}
+		function addFence(){
+			var fence = new pxBorder(20,0.05,1.5);
+			fence.variance = 1;
+			fence.gen();
+			fence.scale = [1,1,1];
+			fence.position = [Math.random()*40-20,-1,Math.random()*40-20];
+			fence.rotate = Math.random()*3;
+			fence.vcolor = [Math.random()>0.5,Math.random()>0.5,Math.random()>0.5,1];
+			borders.push(fence);
+		}
+
+		function addGround(){
+			var te = new groundMesh(10, 10, 80,[0.2,0.8,0.2]);
+			te.scale = [5,3,5];
+			te.rotate = Math.random()*90;
+			te.position = [Math.random()*40-20,-1,Math.random()*40-20];
+			te.velocity = [Math.random()*0.05-0.025,0,Math.random()*0.05-0.025];
+			var grey = Math.random()*2+0.01;
+			te.vcolor = [grey,grey,grey,1];
+			if(Math.random()>0.5) te.texture = mytex2;
+				else te.texture = mytex3;
+			terra.push(te);
+		}
+		
+		function initImages(){		
+			mytex = createTheTexture(gl);
+    		mytex.image = document.getElementById('img01');		
+			mytex.image.src = "terrain/squiggle.png";
+			
+			mytex2 = createTheTexture(gl);
+    		mytex2.image = document.getElementById('img02');
+    		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);	
+			
+			mytex3 = createTheTexture(gl);
+    		mytex3.image = document.getElementById('img03');
+    		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);	
+			
+			signImage = createTheTexture(gl);
+			signImage.image = document.getElementById('img04');
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);	
+		}
+		
+		function revolve(){
+			revolt+=0.01;
+			return revolt;
+		}
+				
+	function animate() {
+			cam.move();
+			gif.manage();
+			window.requestAnimFrame( animate );
+			gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+			gl.enable(gl.DEPTH_TEST);
+			gl.uniform4f(vcolor,1,1,1,1);
+			gl.uniform4f(fog,1,1,1,0.1);
+			gl.uniform1f(vinvert,0);
+			gl.bindFramebuffer(gl.FRAMEBUFFER, fboz[0].buffer);
+			gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+			mat4.perspective(pMatrix,45, c.width / c.height, 0.001, 100.0);
+			mat4.identity(mvMatrix);
+			mat4.lookAt(mvMatrix, cam.position, cam.forward, [0,1,0]);
+			setMatrixUniforms();
+			var i;
+			
+			gl.uniform1f(fbusetex,1);
+			for(i=0;i<terra.length;i++){
+				terra[i].draw(gl,terra[i].texture);
+				terra[i].position[0]+=terra[i].velocity[0];
+				terra[i].position[2]+=terra[i].velocity[2];
+				terra[i].velocity[0]*= 0.98;
+				terra[i].velocity[2]*= 0.98;
+				terra[i].rotate+=0.001;
+
+			}
+			for(i=0;i<gif.house.length;i++){
+				gl.uniform1f(fbusetex,1);
+				gif.house[i].draw(gl,signImage);
+				if(drawsigns){
+					gif.signs[i].draw(gl,gif.signs[i].texture);
+					gif.signs[i].rotate += 0.02;
+				}
+			}
+			if(drawsigns){
+			for(i=0;i<borders.length;i++){
+				gl.uniform1f(fbusetex,1);
+				borders[i].draw(gl,mytex3);
+			}
+			}
+			gl.uniform3f(vscale,1,1,1);
+			gl.uniform3f(vtranslate,0,0,0);
+			gl.uniform4f(fog,0,0,0,0);
+			gl.uniform1f(vrotate,0);
+			gl.disable(gl.DEPTH_TEST);
+			mat4.identity(pMatrix);
+			mat4.identity(mvMatrix);
+			setMatrixUniforms();
+			gl.uniform1f(fbusetex,1);
+			gl.uniform4f(vcolor,1,1,1,1);
+			if(glitz.active) {
+				mash.draw(gl,fboz[1].texture);
+				glitz.draw(gl,fboz[1].texture);
+			}
+			if (shot) {
+				shot.draw(gl,fboz[1].texture);
+				var x = shot.scale[0]*0.995;
+				shot.scale[0]=x;
+				shot.scale[1]=x;
+				if (x < 0.75) shot=null;
+			}
+			//copy first FBO to second FBO to prevent feedback texture glitch
+			gl.bindFramebuffer(gl.FRAMEBUFFER, fboz[1].buffer);
+			gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+			gl.uniform3f(vscale,1,1,1);
+			billB.draw(gl,fboz[0].texture);
+			
+			if (inverted) gl.uniform1f(vinvert,1);
+			//draw first FBO to screen
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+			gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+			billB.draw(gl,fboz[0].texture);
+
+			gl.uniform1f(fbusetex,0);
+
+			gl.uniform4f(vcolor,1,1,1,1);
+			if(drawsigns){
+				if(ti[0]>ti.tt[0]){
+					glitz.gen();
+					mash.gen();
+			
+					terra[Math.floor(Math.random()*terra.length)].velocity=[Math.random()*0.02-0.01,0,Math.random()*0.02-0.01];
+					glitz.active = Math.random()>0.95;
+					ti.tt[0] = Math.floor(Math.random()*40+1);
+			 		ti[0]=0;
+				}
+				ti[0]++;
+			}
+			gl.bindTexture(gl.TEXTURE_2D, mytex);
+   			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mytex.image);
+   			gl.bindTexture(gl.TEXTURE_2D, mytex2);
+   			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mytex2.image);
+   			gl.bindTexture(gl.TEXTURE_2D, mytex3);
+   			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mytex3.image);
+   			gl.bindTexture(gl.TEXTURE_2D, signImage);
+   			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, signImage.image);
+		}
+
+    </script>
+    <script>
+   		var offset = 0;
+   		var storeXX=0;
+		var storeYY=0;
+		var bowie;
+		var poling;
+		var jonomilo;
+		var $cords;
+		
+    	$(document).ready(function() {
+			$('#over').mousedown(function(e) {
+				e.originalEvent.preventDefault();
+    			storeXX = e.pageX;
+    			storeYY = e.pageY;
+    			$('#over').mousemove(function(e) {
+        			var shiftX = e.pageX-storeXX;
+        			var shiftY = e.pageY-storeYY;
+        			storeXX = e.pageX;
+       				storeYY = e.pageY;
+      				$('#artholder').css({left:'+='+shiftX+'px'});
+   		 		});
+			})
+			.mouseup(function() {
+    			$('#over').unbind("mousemove");
+			});
+			$('#info').click(function(){
+				$('#pavilion-info').toggle(200);
+			});
+			$(document).keypress(function(e){
+				if(e.which==102) addShot();
+				if(e.which==114) {
+					if (inverted) inverted = false;
+					else inverted = true;
+				}
+			});
+		});
+		$(window).load(function(){
+			$("#info").animate({height:'200px'},200);
+			bowie = document.getElementById('bowie');
+			if (bowie.canPlayType("audio/mpeg") !== "") bowie.src = "audio/OVOXO (Trust Edit).mp3";
+			else bowie.src = "audio/OVOXO (Trust Edit).ogg";
+			bowie.pause();
+			poling = document.getElementById('poling');
+			if (poling.canPlayType("audio/mpeg") !== "") poling.src = "audio/poling.mp3";
+			else poling.src = "audio/poling.ogg";
+			poling.pause();
+			jonomilo = document.getElementById('jonomilo');
+			if (jonomilo.canPlayType("audio/mpeg") !== "") jonomilo.src = "audio/jonomilo.mp3";
+			else jonomilo.src = "audio/jonomilo.ogg";
+			jonomilo.pause();
+			$("#loader").remove();
+			$("#hidden").toggle();
+			$cords= $("#cords");
+			animate();
+		});
+
+	</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19743116-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</html>
